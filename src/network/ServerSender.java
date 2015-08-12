@@ -48,4 +48,10 @@ public class ServerSender implements Runnable
 			} catch (Exception e) {}
 		}
 	}
+
+	public void tick()
+	{
+		for (Player player : server.clients.values())
+			player.tick();
+	}
 }
