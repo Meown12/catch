@@ -11,15 +11,15 @@ import java.util.*;
 
 import static misc.Serializer.*;
 import core.Player;
+import misc.KeyInfo;
 
 public class Server
 {
 	DatagramPacket packet;
 	DatagramSocket socket;
 	Map<InetAddress, Player> clients;
-	KeyEvent ke;
 	private byte[] data;
-	private static short PORT;
+	public static short PORT;
 	
 	public Server()
 	{
@@ -40,45 +40,24 @@ public class Server
 		{
 			data = new byte[2000];
 			packet = new DatagramPacket(data, data.length);
-			try	// receive KeyEvent
+			try	// receive KeyInfo
 			{
 				socket.receive(packet);
 				System.out.println("Server> receive data");
 			} catch(Exception e) {System.err.println("Server> receive data: " + e); System.exit(1);}
+			KeyInfo ki = null;
 
-			try // cast data to ke
+			try // cast data to ki
 			{
-				ke =(KeyEvent) byteArrayToObject(data);
-			} catch(Exception e) {System.err.println("Server> data to ke: " + e); System.exit(1);}
-		
+				ki = (KeyInfo) byteArrayToObject(data);
+			} catch(Exception e) {System.err.println("Server> data to ki: " + e); System.exit(1);}
 
                         Player localPlayer;
                         if (clients.containsKey(packet.getAddress()))
                                 localPlayer = clients.get(packet.getAddress());
                         else
-                                clients.put(packet.getAddress(), localPlayer = new Player(10,10));
-
-                        if (ke.getKeyCode() == KeyEvent.VK_UP) // move
-                        {
-                                localPlayer.setDirection(2);
-                                System.out.println("Server> moved Up");
-                        } else if (ke.getKeyCode() == KeyEvent.VK_RIGHT)
-                        {
-                                localPlayer.setDirection(3);
-                                System.out.println("Server> moved Right");
-                        } else if (ke.getKeyCode() == KeyEvent.VK_DOWN)
-                        {
-                                localPlayer.setDirection(4);
-                                System.out.println("Server> moved Down");
-                        } else if (ke.getKeyCode() == KeyEvent.VK_LEFT)
-                        {
-                                localPlayer.setDirection(1);
-                                System.out.println("Server> moved Left");
-                        } else
-                        {
-                                System.err.println("Server> ke contained no move operation");
-                        }
-		
+                                clients.put(packet.getAddress(), localPlayer = new Player(10,10, false));
+			localPlayer.applyKeyInfo(ki);
 		}
 	}
 	
