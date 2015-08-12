@@ -2,8 +2,11 @@ package core;
 
 public class Player
 {
+	public static final int LEFT = 1, UP = 2, RIGHT = 3, DOWN = 4;
+
 	private int x, y;
-	private byte direction; // 1 = left;  2 = up; 3 = right; 4= down;
+	private byte direction;
+
 	public Player(int x, int y)
 	{
 		this.x = x;
@@ -26,8 +29,8 @@ public class Player
 		return direction;
 	}
 	
-	public void setDirection(int dir)
+	public void setDirection(int direction)
 	{
-		direction =(byte) dir;
+		this.direction = (byte) direction;
 	}
 }
