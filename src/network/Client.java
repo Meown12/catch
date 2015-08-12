@@ -39,12 +39,13 @@ public class Client
 		{
 			socket = new DatagramSocket(PORT);
 		} catch (Exception e) { System.out.println("Client ERROR> create socket"); System.exit(1); }
-		new ClientSender(this);
 		run();
 	}
 
 	private void run()
 	{
+		Screen.init();
+		Screen.get().addKeyListener(new ClientSender(this));
 		while (true)
 		{
 			byte[] data = new byte[2000];

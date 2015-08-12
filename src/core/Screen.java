@@ -11,9 +11,14 @@ public class Screen extends JPanel
 {
 	public static final int SCREEN_WIDTH = 1920, SCREEN_HEIGHT = 1080;
 	private static JFrame frame;
-	private static Screen instance = new Screen();
+	private static Screen instance;
 	private static BufferedImage buffer;
 	private static Graphics g; // graphics for the buffer
+
+	public static void init()
+	{
+		instance = new Screen();
+	}
 
 	private Screen()
 	{
