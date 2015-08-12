@@ -1,16 +1,57 @@
 package core;
 
+import java.awt.event.KeyEvent;
+
+import misc.KeyInfo;
+
 public class Player
 {
-	public static final int LEFT = 1, UP = 2, RIGHT = 3, DOWN = 4;
-
+	public static final int SPEED = 5, SIZE = 20;;
+	private byte w = 0, a = 0, s = 0, d = 0;
+	private boolean runner = false;
 	private int x, y;
-	private byte direction;
 
-	public Player(int x, int y)
+	public Player(int x, int y, boolean runner)
 	{
 		this.x = x;
 		this.y = y;
+		this.runner = runner;
+	}
+
+	public void tick()
+	{
+		x += (d-a)*SPEED;
+		y += (s-w)*SPEED;
+	}
+
+	public void applyKeyInfo(KeyInfo keyInfo)
+	{
+		if (keyInfo.isPressed())
+		{
+			if (keyInfo.getKey() == KeyEvent.VK_UP)
+				w = 1;
+			else if (keyInfo.getKey() == KeyEvent.VK_LEFT)
+				a = 1;
+			else if (keyInfo.getKey() == KeyEvent.VK_DOWN)
+				s = 1;
+			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT)
+				d = 1;
+			else
+				System.out.println("bad key ID: " + keyInfo.getKey());
+		}
+		else
+		{
+			if (keyInfo.getKey() == KeyEvent.VK_UP)
+				w = 0;
+			else if (keyInfo.getKey() == KeyEvent.VK_LEFT)
+				a = 0;
+			else if (keyInfo.getKey() == KeyEvent.VK_DOWN)
+				s = 0;
+			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT)
+				d = 0;
+			else
+				System.out.println("bad key ID: " + keyInfo.getKey());
+		}
 	}
 
 	public void move(int xOffset, int yOffset)
@@ -21,16 +62,6 @@ public class Player
 
 	public void render()
 	{
-		Screen.g().fillRect(x, y, 20, 20);
-	}
-	
-	public byte getDirection()
-	{
-		return direction;
-	}
-	
-	public void setDirection(int direction)
-	{
-		this.direction = (byte) direction;
+		Screen.g().fillRect(x, y, SIZE, SIZE);
 	}
 }
