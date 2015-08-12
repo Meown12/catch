@@ -60,38 +60,4 @@ public class Client
 			}
 		}
 	}
-
-	static class ClientSender implements KeyListener
-	{
-		Client client;
-
-		ClientSender(Client client)
-		{
-			this.client = client;
-		}
-
-		public void keyPressed(KeyEvent keyEvent)
-		{
-			byte[] data = objectToByteArray(keyEvent);
-			DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
-			try
-			{
-				client.socket.send(packet);
-				System.out.println("ClientSender> sending KeyEvent");
-			} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
-		}
-
-		public void keyReleased(KeyEvent keyEvent)
-		{
-			byte[] data = objectToByteArray(keyEvent);
-			DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
-			try
-			{
-				client.socket.send(packet);
-				System.out.println("ClientSender> sending KeyEvent");
-			} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
-		}
-
-		public void keyTyped(KeyEvent keyEvent) {}
-	}
 }
