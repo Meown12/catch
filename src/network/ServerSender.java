@@ -46,6 +46,7 @@ public class ServerSender implements Runnable
 			{
 				Thread.sleep(20);
 			} catch (Exception e) {}
+			tick();
 		}
 	}
 
