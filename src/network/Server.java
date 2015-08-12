@@ -10,6 +10,7 @@ import java.util.*;
 
 import static misc.Serializer.*;
 import core.Player;
+import core.Screen;
 import misc.KeyInfo;
 
 public class Server
@@ -23,7 +24,7 @@ public class Server
 	public Server()
 	{
 		System.out.println("Server> started");
-
+		Screen.init();
 		clients = new HashMap<InetAddress, Player>();
 
 		ServerSender sender = new ServerSender(this);

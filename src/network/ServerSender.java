@@ -11,6 +11,7 @@ import java.util.*;
 import static misc.Serializer.*;
 import network.Server;
 import core.Player;
+import core.Screen;
 
 public class ServerSender implements Runnable
 {
@@ -41,6 +42,12 @@ public class ServerSender implements Runnable
 					System.out.println("ServerSender> send data");
 				} catch (Exception e) {System.err.println("ServerSender> send data: " + e); System.exit(1);}
 			}
+
+			for (Player player : server.clients.values())
+			{
+				player.render();
+			}
+			Screen.update();
 			
 			try
 			{
