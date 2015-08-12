@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.net.*;
-import java.awt.event.KeyEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.*;
@@ -24,9 +23,9 @@ public class Server
 	public Server()
 	{
 		System.out.println("Server> started");
-		
+
 		clients = new HashMap<InetAddress, Player>();
-		
+
 		ServerSender sender = new ServerSender(this);
 		new Thread(sender).start(); // starts Sender;
 
@@ -34,7 +33,7 @@ public class Server
 		{
 			socket = new DatagramSocket(PORT);
 			System.out.println("Server> socket init");	
-		} catch(Exception e) {System.err.println("Server> socket init: " + e);System.exit(1);}
+		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
 
 		while (true)
 		{
@@ -44,19 +43,21 @@ public class Server
 			{
 				socket.receive(packet);
 				System.out.println("Server> receive data");
-			} catch(Exception e) {System.err.println("Server> receive data: " + e); System.exit(1);}
-			KeyInfo ki = null;
+			} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
 
+			KeyInfo ki = null;
 			try // cast data to ki
 			{
 				ki = (KeyInfo) byteArrayToObject(data);
-			} catch(Exception e) {System.err.println("Server> data to ki: " + e); System.exit(1);}
+			} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
+
 
                         Player localPlayer;
                         if (clients.containsKey(packet.getAddress()))
                                 localPlayer = clients.get(packet.getAddress());
                         else
                                 clients.put(packet.getAddress(), localPlayer = new Player(10,10, false));
+			
 			localPlayer.applyKeyInfo(ki);
 		}
 	}
