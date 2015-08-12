@@ -25,16 +25,16 @@ public class Client
 
 	private Client(String args[])
 	{
-		if (args.length != 3)
+		if (args.length != 2)
 		{
-			System.out.println("Usage: " + args[0] + " <address> <port>");
+			System.out.println("Usage: ... <address> <port>");
 			System.exit(1);
 		}
-		PORT = (short) Integer.parseInt(args[1]);
 		try
 		{
-			ADDR = InetAddress.getByName(args[2]);
+			ADDR = InetAddress.getByName(args[0]);
 		} catch (Exception e) { ADDR = null; System.out.println("Client ERROR> wrong address"); System.exit(1); }
+		PORT = (short) Integer.parseInt(args[1]);
 		try
 		{
 			socket = new DatagramSocket(PORT);
