@@ -20,7 +20,8 @@ public class ClientSender implements KeyListener
 
 	public void keyPressed(KeyEvent keyEvent)
 	{
-		byte[] data = objectToByteArray(new KeyInfo(keyEvent.getKeyCode(), true));
+		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true);
+		byte[] data = objectToByteArray(ki);
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{

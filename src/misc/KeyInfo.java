@@ -1,6 +1,8 @@
 package misc;
 
-public class KeyInfo
+import java.io.Serializable;
+
+public class KeyInfo implements Serializable
 {
 	private final int key;
 	private final boolean pressed;

@@ -38,6 +38,7 @@ public class Client
 		try
 		{
 			socket = new DatagramSocket(PORT);
+			System.out.println("Client> create socket");
 		} catch (Exception e) { System.out.println("Client ERROR> create socket"); System.exit(1); }
 		run();
 	}
@@ -53,7 +54,8 @@ public class Client
 			try
 			{
 				socket.receive(packet);
-			} catch (Exception e) { System.out.println("Client> receive"); System.exit(1); }
+				System.out.println("Client> receive");
+			} catch (Exception e) { System.out.println("Client ERROR> receive"); System.exit(1); }
 
 			for (Player player : (LinkedList<Player>) byteArrayToObject(packet.getData()))
 			{
