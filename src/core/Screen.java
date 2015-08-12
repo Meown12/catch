@@ -36,7 +36,7 @@ public class Screen extends JPanel
 		requestFocusInWindow();
 	}
 
-	static void update()
+	public static void update()
 	{
 		instance.getGraphics().drawImage(buffer, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null); // renders buffer on screen
 		g.dispose(); // disposes g

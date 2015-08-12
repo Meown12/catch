@@ -57,10 +57,15 @@ public class Client
 				System.out.println("Client> receive");
 			} catch (Exception e) { System.out.println("Client ERROR> receive"); System.exit(1); }
 
-			for (Player player : (LinkedList<Player>) byteArrayToObject(packet.getData()))
+			LinkedList<Player> players = (LinkedList<Player>) byteArrayToObject(packet.getData());
+			if (players == null)
+				System.out.println("EROROROLROOROROR");
+
+			for (Player player : players)
 			{
 				player.render();
 			}
+			Screen.update();
 		}
 	}
 }

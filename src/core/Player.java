@@ -2,12 +2,13 @@ package core;
 
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
+import java.awt.Color;
 
 import misc.KeyInfo;
 
 public class Player implements Serializable
 {
-	public static final int SPEED = 5, SIZE = 20;;
+	public static final int SPEED = 5, SIZE = 200;
 	private byte w = 0, a = 0, s = 0, d = 0;
 	private boolean runner = false;
 	private int x, y;
@@ -63,6 +64,8 @@ public class Player implements Serializable
 
 	public void render()
 	{
+		Screen.g().setColor(Color.RED);
 		Screen.g().fillRect(x, y, SIZE, SIZE);
+		System.out.println("x={" + x + "} y={" + y + "}");
 	}
 }
