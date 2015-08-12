@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 
-import core.Main;
-
 public class Screen extends JPanel
 {
 	public static final int SCREEN_WIDTH = 1920, SCREEN_HEIGHT = 1080;
@@ -44,3 +42,4 @@ public class Screen extends JPanel
 
 	public static Graphics g() { return g; }
 	public static Screen get() { return instance; }
+}
