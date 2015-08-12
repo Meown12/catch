@@ -1,10 +1,11 @@
 package core;
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 
 import misc.KeyInfo;
 
-public class Player
+public class Player implements Serializable
 {
 	public static final int SPEED = 5, SIZE = 20;;
 	private byte w = 0, a = 0, s = 0, d = 0;

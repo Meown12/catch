@@ -29,7 +29,6 @@ public class ServerSender implements Runnable
 	{
 		while (true)
 		{
-			data = new byte[2000];
 			data = objectToByteArray(new LinkedList<Player>(server.clients.values()));
 			
 			for (InetAddress addr : server.clients.keySet())
