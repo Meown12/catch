@@ -59,7 +59,10 @@ public class Client
 
 			LinkedList<Player> players = (LinkedList<Player>) byteArrayToObject(packet.getData());
 			if (players == null)
-				System.out.println("EROROROLROOROROR");
+			{
+				System.out.println("Client> Cannot convert the data to a LinkedList<Player>");
+				System.exit(1);
+			}
 
 			for (Player player : players)
 			{

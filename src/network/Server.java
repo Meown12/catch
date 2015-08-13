@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.net.*;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.*;
+import java.util.LinkedList;
 
 import static misc.Serializer.*;
 import core.Player;
@@ -18,8 +18,7 @@ public class Server
 	public static short PORT;
 	DatagramPacket packet;
 	DatagramSocket socket;
-	Map<InetAddress, Player> clients;
-	private Player serverPlayer;
+	LinkedList<Player> players;
 	private byte[] data;
 	
 	public Server()
@@ -27,8 +26,8 @@ public class Server
 		System.out.println("Server> started");
 		Screen.init();
 		Screen.get().addKeyListener(new ServerKeyManager(this));
-		clients = new HashMap<InetAddress, Player>();
-		serverPlayer = new Player(10, 10, true);
+		players = new LinkedList<Player>();
+		players.add(new Player(10, 10, true, "localhost"));
 		ServerSender sender = new ServerSender(this);
 		new Thread(sender).start(); // starts Sender;
 
@@ -55,12 +54,21 @@ public class Server
 			} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
 
 
-                        Player localPlayer;
-                        if (clients.containsKey(packet.getAddress()))
-                                localPlayer = clients.get(packet.getAddress());
-                        else
-                                clients.put(packet.getAddress(), localPlayer = new Player(10,10, false));
-			
+                        Player localPlayer = null;
+
+			for (Player player : getPlayers())
+			{
+				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress()))
+				{
+					localPlayer = player;
+					break;
+				}
+			}
+
+			if (localPlayer == null)
+			{
+				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName()));
+			}
 			localPlayer.applyKeyInfo(ki);
 		}
 	}
@@ -71,8 +79,13 @@ public class Server
 		new Server();
 	}
 
-	Player getPlayer()
+	LinkedList<Player> getPlayers()
 	{
-		return serverPlayer;
+		return players;
+	}
+
+	Player getServerPlayer()
+	{
+		return players.get(0);
 	}
 }

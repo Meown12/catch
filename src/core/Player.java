@@ -3,6 +3,7 @@ package core;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.awt.Color;
+import java.net.InetAddress;
 
 import misc.KeyInfo;
 
@@ -12,12 +13,17 @@ public class Player implements Serializable
 	private byte w = 0, a = 0, s = 0, d = 0;
 	private boolean runner = false;
 	private int x, y;
+	private InetAddress address;
 
-	public Player(int x, int y, boolean runner)
+	public Player(int x, int y, boolean runner, String addressString)
 	{
 		this.x = x;
 		this.y = y;
 		this.runner = runner;
+		try
+		{
+			this.address = InetAddress.getByName(addressString);
+		} catch (Exception e) { System.out.println("Player> set address: " + e); System.exit(1); }
 	}
 
 	public void tick()
@@ -66,6 +72,10 @@ public class Player implements Serializable
 	{
 		Screen.g().setColor(Color.RED);
 		Screen.g().fillRect(x, y, SIZE, SIZE);
-		System.out.println("x={" + x + "} y={" + y + "}");
+	}
+
+	public InetAddress getAddress()
+	{
+		return address;
 	}
 }

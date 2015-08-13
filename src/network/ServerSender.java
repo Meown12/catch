@@ -15,7 +15,6 @@ import core.Screen;
 
 public class ServerSender implements Runnable
 {
-	
 	Server server;
 	DatagramPacket packet;		
 	byte[] data;
@@ -30,11 +29,11 @@ public class ServerSender implements Runnable
 	{
 		while (true)
 		{
-			data = objectToByteArray(new LinkedList<Player>(server.clients.values()));
+			data = objectToByteArray(new LinkedList<Player>(server.getPlayers()));
 			
-			for (InetAddress addr : server.clients.keySet())
+			for (int i = 1; i < server.getPlayers().size(); i++)
 			{
-				packet = new DatagramPacket(data, data.length, addr, server.PORT);
+				packet = new DatagramPacket(data, data.length, server.getPlayers().get(i).getAddress(), server.PORT);
 			
 				try
 				{
@@ -56,19 +55,15 @@ public class ServerSender implements Runnable
 
 	private void render()
 	{
-		server.getPlayer().render();
-		for (Player player : server.clients.values())
-		{
+		for (Player player : server.getPlayers())
 			player.render();
-		}
 		Screen.update();
 		
 	}
 
 	private void tick()
 	{
-		server.getPlayer().tick();
-		for (Player player : server.clients.values())
+		for (Player player : server.getPlayers())
 			player.tick();
 	}
 }

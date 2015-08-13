@@ -18,13 +18,13 @@ public class ServerKeyManager implements KeyListener
 	public void keyPressed(KeyEvent keyEvent)
 	{
 		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true);
-		server.getPlayer().applyKeyInfo(ki);
+		server.getServerPlayer().applyKeyInfo(ki);
 	}
 
 	public void keyReleased(KeyEvent keyEvent)
 	{
 		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), false);
-		server.getPlayer().applyKeyInfo(ki);
+		server.getServerPlayer().applyKeyInfo(ki);
 	}
 
 	public void keyTyped(KeyEvent keyEvent) {}
