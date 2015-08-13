@@ -43,22 +43,31 @@ public class ServerSender implements Runnable
 				} catch (Exception e) {System.err.println("ServerSender> send data: " + e); System.exit(1);}
 			}
 
-			for (Player player : server.clients.values())
-			{
-				player.render();
-			}
-			Screen.update();
-			
+			tick();
+			render();	
+
 			try
 			{
 				Thread.sleep(20);
 			} catch (Exception e) {}
-			tick();
+
 		}
 	}
 
-	public void tick()
+	private void render()
 	{
+		server.getPlayer().render();
+		for (Player player : server.clients.values())
+		{
+			player.render();
+		}
+		Screen.update();
+		
+	}
+
+	private void tick()
+	{
+		server.getPlayer().tick();
 		for (Player player : server.clients.values())
 			player.tick();
 	}

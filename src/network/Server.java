@@ -15,18 +15,20 @@ import misc.KeyInfo;
 
 public class Server
 {
+	public static short PORT;
 	DatagramPacket packet;
 	DatagramSocket socket;
 	Map<InetAddress, Player> clients;
+	private Player serverPlayer;
 	private byte[] data;
-	public static short PORT;
 	
 	public Server()
 	{
 		System.out.println("Server> started");
 		Screen.init();
+		Screen.get().addKeyListener(new ServerKeyManager(this));
 		clients = new HashMap<InetAddress, Player>();
-
+		serverPlayer = new Player(10, 10, true);
 		ServerSender sender = new ServerSender(this);
 		new Thread(sender).start(); // starts Sender;
 
@@ -67,5 +69,10 @@ public class Server
 	{
 		PORT = (short) Integer.parseInt(args[0]);
 		new Server();
+	}
+
+	Player getPlayer()
+	{
+		return serverPlayer;
 	}
 }
