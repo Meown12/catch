@@ -20,19 +20,19 @@ public class ClientSender implements KeyListener
 
 	public void keyPressed(KeyEvent keyEvent)
 	{
-		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true);
-		byte[] data = objectToByteArray(ki);
+		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true); // convert keyEvent to KeyInfo
+		byte[] data = objectToByteArray(ki); // convert it to byte[]
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{
-			client.socket.send(packet);
+			client.socket.send(packet); // send it to Server
 			System.out.println("ClientSender> sending KeyInfo");
 		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
 	}
 
 	public void keyReleased(KeyEvent keyEvent)
 	{
-		byte[] data = objectToByteArray(new KeyInfo(keyEvent.getKeyCode(), false));
+		byte[] data = objectToByteArray(new KeyInfo(keyEvent.getKeyCode(), false)); // as above
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{

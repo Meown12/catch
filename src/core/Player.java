@@ -28,28 +28,29 @@ public class Player implements Serializable
 
 	public void tick()
 	{
+		// move
 		x += (d-a)*SPEED;
 		y += (s-w)*SPEED;
 	}
 
 	public void applyKeyInfo(KeyInfo keyInfo)
 	{
-		if (keyInfo.isPressed())
+		if (keyInfo.isPressed()) // is the keyInfo represents a key Press
 		{
-			if (keyInfo.getKey() == KeyEvent.VK_UP)
+			if (keyInfo.getKey() == KeyEvent.VK_UP) // if it's the up-arrow
 				w = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_LEFT)
+			else if (keyInfo.getKey() == KeyEvent.VK_LEFT) // .. left-arrow
 				a = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_DOWN)
+			else if (keyInfo.getKey() == KeyEvent.VK_DOWN) // .. down-arrw
 				s = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT)
+			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT) // .. right-arrow
 				d = 1;
 			else
 				System.out.println("bad key ID: " + keyInfo.getKey());
 		}
-		else
+		else // if the keyInfo represents a key Release
 		{
-			if (keyInfo.getKey() == KeyEvent.VK_UP)
+			if (keyInfo.getKey() == KeyEvent.VK_UP) // as above
 				w = 0;
 			else if (keyInfo.getKey() == KeyEvent.VK_LEFT)
 				a = 0;

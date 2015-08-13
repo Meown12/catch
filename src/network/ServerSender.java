@@ -27,43 +27,42 @@ public class ServerSender implements Runnable
 		
 	public void run()
 	{
-		while (true)
+		while (true) // repeat forever
 		{
-			data = objectToByteArray(new LinkedList<Player>(server.getPlayers()));
+			data = objectToByteArray(new LinkedList<Player>(server.getPlayers())); // convert players to data
 			
-			for (int i = 1; i < server.getPlayers().size(); i++)
+			for (int i = 1 /* !!! */; i < server.getPlayers().size(); i++) // for every player EXCEPT of the serverPlayer
 			{
 				packet = new DatagramPacket(data, data.length, server.getPlayers().get(i).getAddress(), server.PORT);
 			
 				try
 				{
-					server.socket.send(packet);
+					server.socket.send(packet); // send him all players to render
 					System.out.println("ServerSender> send data");
 				} catch (Exception e) {System.err.println("ServerSender> send data: " + e); System.exit(1);}
 			}
 
-			tick();
-			render();	
+			tick(); // tick all players
+			render(); // render all players
 
 			try
 			{
-				Thread.sleep(20);
+				Thread.sleep(20); // wait
 			} catch (Exception e) {}
-
 		}
 	}
 
 	private void render()
 	{
-		for (Player player : server.getPlayers())
+		for (Player player : server.getPlayers()) // render all players
 			player.render();
-		Screen.update();
+		Screen.update(); // update Screen
 		
 	}
 
 	private void tick()
 	{
-		for (Player player : server.getPlayers())
+		for (Player player : server.getPlayers()) // tick all players
 			player.tick();
 	}
 }

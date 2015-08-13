@@ -25,51 +25,52 @@ public class Server
 	{
 		System.out.println("Server> started");
 		Screen.init();
-		Screen.get().addKeyListener(new ServerKeyManager(this));
+		Screen.get().addKeyListener(new ServerKeyManager(this)); // create ServerKeyManager
 		players = new LinkedList<Player>();
-		players.add(new Player(10, 10, true, "localhost"));
-		ServerSender sender = new ServerSender(this);
-		new Thread(sender).start(); // starts Sender;
+		players.add(new Player(10, 10, true, "localhost")); // add first player to players
+		ServerSender sender = new ServerSender(this); // create ServerSender
+		new Thread(sender).start(); // start ServerSender
 
 		try
 		{
-			socket = new DatagramSocket(PORT);
+			socket = new DatagramSocket(PORT); // setup socket
 			System.out.println("Server> socket init");	
 		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
 
-		while (true)
+		while (true) // repeat forever
 		{
 			data = new byte[2000];
 			packet = new DatagramPacket(data, data.length);
-			try	// receive KeyInfo
+			try
 			{
-				socket.receive(packet);
+				socket.receive(packet); // receive KeyInfo as byte[]
 				System.out.println("Server> receive data");
 			} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
 
 			KeyInfo ki = null;
-			try // cast data to ki
+			try
 			{
-				ki = (KeyInfo) byteArrayToObject(data);
+				ki = (KeyInfo) byteArrayToObject(data); // convert to KeyInfo
 			} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
 
 
                         Player localPlayer = null;
 
-			for (Player player : getPlayers())
+			for (Player player : getPlayers()) // for all players
 			{
-				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress()))
+				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyInfo came from any of you
 				{
-					localPlayer = player;
+					localPlayer = player; // be the localPlayer!
 					break;
 				}
 			}
 
-			if (localPlayer == null)
+			if (localPlayer == null) // if not
 			{
-				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName()));
+				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
 			}
-			localPlayer.applyKeyInfo(ki);
+
+			localPlayer.applyKeyInfo(ki); // apply the KeyInfo to localPlayer
 		}
 	}
 	
