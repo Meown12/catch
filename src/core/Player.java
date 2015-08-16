@@ -9,17 +9,17 @@ import misc.KeyInfo;
 
 public class Player implements Serializable
 {
-	public static final int SPEED = 5, SIZE = 200;
+	public static final int SPEED = 5, SIZE = 20;
 	private byte w = 0, a = 0, s = 0, d = 0;
-	private boolean runner = false;
+	private boolean running = false;
 	private int x, y;
 	private InetAddress address;
 
-	public Player(int x, int y, boolean runner, String addressString)
+	public Player(int x, int y, boolean running, String addressString)
 	{
 		this.x = x;
 		this.y = y;
-		this.runner = runner;
+		this.running = running;
 		try
 		{
 			this.address = InetAddress.getByName(addressString);
@@ -71,12 +71,27 @@ public class Player implements Serializable
 
 	public void render()
 	{
-		Screen.g().setColor(Color.RED);
-		Screen.g().fillRect(x, y, SIZE, SIZE);
+		if (running)
+		{
+			Screen.g().setColor(Color.GREEN);
+			Screen.g().fillRect(x, y, SIZE, SIZE);
+		}
+		else
+		{
+			Screen.g().setColor(Color.RED);
+			Screen.g().fillRect(x, y, SIZE, SIZE);
+		}
 	}
 
-	public InetAddress getAddress()
+	public boolean collide(Player player)
 	{
-		return address;
+		if (Math.abs(x-player.x) < SIZE && Math.abs(y-player.y) < SIZE)
+			return true;
+		return false;
 	}
+
+	public void setRunning(boolean running) { this.running = running; }
+
+	public InetAddress getAddress() { return address; }
+	public boolean isRunning() { return running; }
 }

@@ -16,8 +16,30 @@ public class Game
 
 	public void tick()
 	{
-		// TODO
+		Player runner = getRunner();
+		for (Player player : getPlayers())
+		{
+			if (runner.collide(player))
+			{
+				runner.setRunning(false);
+				player.setRunning(true);
+				break;
+			}
+		}
 	}
 
+	private Player getRunner()
+	{
+		for (Player player : getPlayers())
+		{
+			if (player.isRunning())
+			{
+				return player;
+			}
+		}
+
+		System.out.println("Game.getRunner()> no runner found"); // DEBUG
+		return null;
+	}
 	public LinkedList<Player> getPlayers() { return players; }
 }
