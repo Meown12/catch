@@ -24,7 +24,6 @@ public class Game
 				runner.setRunning(false);
 				runner.setPosition(10, 10);
 				player.setRunning(true);
-				System.out.println("catched");
 				break;
 			}
 		}
