@@ -85,8 +85,12 @@ public class Player implements Serializable
 
 	public boolean collide(Player player)
 	{
+		if (player == this)
+			return false;
+
 		if (Math.abs(x-player.x) < SIZE && Math.abs(y-player.y) < SIZE)
 			return true;
+
 		return false;
 	}
 
