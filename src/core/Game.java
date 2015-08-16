@@ -22,6 +22,7 @@ public class Game
 			if (runner.collide(player))
 			{
 				runner.setRunning(false);
+				runner.setPosition(10, 10);
 				player.setRunning(true);
 				break;
 			}

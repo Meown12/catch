@@ -91,6 +91,7 @@ public class Player implements Serializable
 	}
 
 	public void setRunning(boolean running) { this.running = running; }
+	public void setPosition(int x, int y) { this.x = x; this.y = y; }
 
 	public InetAddress getAddress() { return address; }
 	public boolean isRunning() { return running; }
