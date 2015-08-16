@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import static misc.Serializer.*;
 import core.Player;
 import core.Screen;
+import core.Game;
 import misc.KeyInfo;
 
 public class Server
@@ -18,7 +19,7 @@ public class Server
 	public static short PORT;
 	DatagramPacket packet;
 	DatagramSocket socket;
-	LinkedList<Player> players;
+	Game game;
 	private byte[] data;
 	
 	public Server()
@@ -26,8 +27,7 @@ public class Server
 		System.out.println("Server> started");
 		Screen.init();
 		Screen.get().addKeyListener(new ServerKeyManager(this)); // create ServerKeyManager
-		players = new LinkedList<Player>();
-		players.add(new Player(10, 10, true, "localhost")); // add first player to players
+		game = new Game();
 		ServerSender sender = new ServerSender(this); // create ServerSender
 		new Thread(sender).start(); // start ServerSender
 
@@ -82,11 +82,11 @@ public class Server
 
 	LinkedList<Player> getPlayers()
 	{
-		return players;
+		return game.getPlayers();
 	}
 
 	Player getServerPlayer()
 	{
-		return players.get(0);
+		return getPlayers().get(0);
 	}
 }
