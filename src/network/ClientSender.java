@@ -36,14 +36,20 @@ public class ClientSender implements KeyListener
 	{
 		int code = keyEvent.getKeyCode();
 		if (keys[code] == false)
+		{
+			keys[code] = true;
 			send(code, true);
+		}
 	}
 
 	public void keyReleased(KeyEvent keyEvent)
 	{
 		int code = keyEvent.getKeyCode();
 		if (keys[code] == true)
+		{
+			keys[code] = false;
 			send(code, false);
+		}
 	}
 
 	public void keyTyped(KeyEvent keyEvent) {}
