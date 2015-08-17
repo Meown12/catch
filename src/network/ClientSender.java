@@ -12,15 +12,17 @@ import misc.KeyInfo;
 public class ClientSender implements KeyListener
 {
 	Client client;
+	boolean[] keys = new boolean[500];
 
 	ClientSender(Client client)
 	{
 		this.client = client;
 	}
 
-	public void keyPressed(KeyEvent keyEvent)
+
+	private void send(int code, boolean value)
 	{
-		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true); // convert keyEvent to KeyInfo
+		KeyInfo ki = new KeyInfo(code, value); // convert keyEvent to KeyInfo
 		byte[] data = objectToByteArray(ki); // convert it to byte[]
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
@@ -30,15 +32,18 @@ public class ClientSender implements KeyListener
 		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
 	}
 
+	public void keyPressed(KeyEvent keyEvent)
+	{
+		int code = keyEvent.getKeyCode();
+		if (keys[code] == false)
+			send(code, true);
+	}
+
 	public void keyReleased(KeyEvent keyEvent)
 	{
-		byte[] data = objectToByteArray(new KeyInfo(keyEvent.getKeyCode(), false)); // as above
-		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
-		try
-		{
-			client.socket.send(packet);
-			System.out.println("ClientSender> sending KeyInfo");
-		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
+		int code = keyEvent.getKeyCode();
+		if (keys[code] == true)
+			send(code, false);
 	}
 
 	public void keyTyped(KeyEvent keyEvent) {}
