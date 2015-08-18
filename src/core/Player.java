@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.awt.Color;
 import java.net.InetAddress;
 
-import misc.KeyInfo;
-
 public class Player implements Serializable
 {
 	public static final int SPEED = 5, SIZE = 20;
@@ -33,33 +31,33 @@ public class Player implements Serializable
 		y += (s-w)*SPEED;
 	}
 
-	public void applyKeyInfo(KeyInfo keyInfo)
+	public void applyKeyEvent(KeyEvent keyEvent)
 	{
-		if (keyInfo.isPressed()) // is the keyInfo represents a key Press
+		if (keyEvent.getID() == KeyEvent.KEY_PRESSED) // is the keyEvent represents a key Press
 		{
-			if (keyInfo.getKey() == KeyEvent.VK_UP) // if it's the up-arrow
+			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) // if it's the up-arrow
 				w = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_LEFT) // .. left-arrow
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) // .. left-arrow
 				a = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_DOWN) // .. down-arrw
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) // .. down-arrw
 				s = 1;
-			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT) // .. right-arrow
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) // .. right-arrow
 				d = 1;
 			else
-				System.out.println("bad key ID: " + keyInfo.getKey());
+				System.out.println("bad key ID: " + keyEvent.getKeyCode());
 		}
-		else // if the keyInfo represents a key Release
+		else // if the keyEvent represents a key Release
 		{
-			if (keyInfo.getKey() == KeyEvent.VK_UP) // as above
+			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) // as above
 				w = 0;
-			else if (keyInfo.getKey() == KeyEvent.VK_LEFT)
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT)
 				a = 0;
-			else if (keyInfo.getKey() == KeyEvent.VK_DOWN)
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN)
 				s = 0;
-			else if (keyInfo.getKey() == KeyEvent.VK_RIGHT)
+			else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT)
 				d = 0;
 			else
-				System.out.println("bad key ID: " + keyInfo.getKey());
+				System.out.println("bad key ID: " + keyEvent.getKeyCode());
 		}
 	}
 

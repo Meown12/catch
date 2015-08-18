@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 
 import network.Client;
 import static misc.Serializer.*;
-import misc.KeyInfo;
 
 public class ClientSender implements KeyListener
 {
@@ -20,24 +19,23 @@ public class ClientSender implements KeyListener
 
 	public void keyPressed(KeyEvent keyEvent)
 	{
-		KeyInfo ki = new KeyInfo(keyEvent.getKeyCode(), true); // convert keyEvent to KeyInfo
-		byte[] data = objectToByteArray(ki); // convert it to byte[]
+		byte[] data = objectToByteArray(keyEvent); // convert keyEvent to byte[]
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{
 			client.socket.send(packet); // send it to Server
-			System.out.println("ClientSender> sending KeyInfo");
+			System.out.println("ClientSender> sending KeyEvent");
 		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
 	}
 
 	public void keyReleased(KeyEvent keyEvent)
 	{
-		byte[] data = objectToByteArray(new KeyInfo(keyEvent.getKeyCode(), false)); // as above
+		byte[] data = objectToByteArray(keyEvent.getKeyCode()); // as above
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{
 			client.socket.send(packet);
-			System.out.println("ClientSender> sending KeyInfo");
+			System.out.println("ClientSender> sending KeyEvent");
 		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
 	}
 
