@@ -11,7 +11,7 @@ public class Game
 	public Game()
 	{
 		players = new LinkedList<Player>();
-		players.add(new Player(10, 10, true, "localhost"));
+		players.add(new Player(50, 10, true, "localhost"));
 	}
 
 	public void tick()

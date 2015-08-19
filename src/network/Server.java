@@ -29,7 +29,6 @@ public class Server
 	{
 		System.out.println("Server> started");
 		game = new Game();
-		getPlayers().add(new Player(50, 10, true, "localhost"));
 
 		try
 		{
