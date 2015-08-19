@@ -45,45 +45,45 @@ public class Server
 			@Override
 			public void run()
 			{
-				game.tick();
+				data = new byte[2000];
+				packet = new DatagramPacket(data, data.length);
+				try
+				{
+					socket.receive(packet); // receive KeyEvent as byte[]
+					System.out.println("Server> receive data");
+				} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
+
+				KeyEvent keyEvent = null;
+				try
+				{
+					keyEvent = (KeyEvent) byteArrayToObject(data); // convert to KeyEvent
+				} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
+
+
+				Player localPlayer = null;
+
+				for (Player player : getPlayers()) // for all players
+				{
+					if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
+					{
+						localPlayer = player; // be the localPlayer!
+						break;
+					}
+				}
+
+				if (localPlayer == null) // if not
+				{
+					getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
+				}
+
+				localPlayer.applyKeyEvent(keyEvent); // apply the KeyEvent to localPlayer
 			}
 
 		}, FRAME_INTERVAL, FRAME_INTERVAL);
 
 		while (true)
 		{
-			data = new byte[2000];
-			packet = new DatagramPacket(data, data.length);
-			try
-			{
-				socket.receive(packet); // receive KeyEvent as byte[]
-				System.out.println("Server> receive data");
-			} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
-
-			KeyEvent keyEvent = null;
-			try
-			{
-				keyEvent = (KeyEvent) byteArrayToObject(data); // convert to KeyEvent
-			} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
-
-
-			Player localPlayer = null;
-
-			for (Player player : getPlayers()) // for all players
-			{
-				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
-				{
-					localPlayer = player; // be the localPlayer!
-					break;
-				}
-			}
-
-			if (localPlayer == null) // if not
-			{
-				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
-			}
-
-			localPlayer.applyKeyEvent(keyEvent); // apply the KeyEvent to localPlayer
+			game.tick();
 		}
 	}
 	
