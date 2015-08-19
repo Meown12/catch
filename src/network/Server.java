@@ -29,7 +29,7 @@ public class Server
 	{
 		System.out.println("Server> started");
 		game = new Game();
-		getPlayers().add(new Player(10, 10, true, "localhost"));
+		getPlayers().add(new Player(50, 10, true, "localhost"));
 
 		try
 		{
@@ -80,8 +80,7 @@ public class Server
 			try
 			{
 				socket.send(sendPacket); // send him all players to render
-				System.out.println("ServerSender> send data");
-			} catch (Exception e) {System.err.println("ServerSender> send data: " + e); System.exit(1);}
+			} catch (Exception e) {System.err.println("Server> send data: " + e); System.exit(1);}
 		}
 	}
 
@@ -91,17 +90,16 @@ public class Server
 		DatagramPacket packet = new DatagramPacket(keys, keys.length);
 		try
 		{
-			socket.receive(packet); // receive KeyEvent as byte[]
-			System.out.println("Server> receive data");
+			socket.receive(packet); // receive byte[] keys
 		} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
 
 		Player localPlayer = null;
 
-		for (Player player : getPlayers()) // for all players
+		for (int i = 1; i < getPlayers().size(); i++) // for all players except the server--player
 		{
-			if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
+			if (getPlayers().get(i).getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
 			{
-				localPlayer = player; // be the localPlayer!
+				localPlayer = getPlayers().get(i); // be the localPlayer!
 				break;
 			}
 		}
@@ -138,6 +136,5 @@ public class Server
 	}
 
 	private Player getServerPlayer() { return getPlayers().get(0); }
-
 	private LinkedList<Player> getPlayers() { return game.getPlayers(); }
 }

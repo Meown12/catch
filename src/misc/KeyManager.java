@@ -11,14 +11,12 @@ public class KeyManager implements KeyListener
 
 	@Override public void keyPressed(KeyEvent keyEvent)
 	{
-		int code = keyEvent.getKeyCode();
-		keys[code] = 1;
+		keys[keyEvent.getKeyCode()] = 1;
 	}
 
 	@Override public void keyReleased(KeyEvent keyEvent)
 	{
-		int code = keyEvent.getKeyCode();
-		keys[code] = 0;
+		keys[keyEvent.getKeyCode()] = 0;
 	}
 
 	@Override public void keyTyped(KeyEvent keyEvent) {}

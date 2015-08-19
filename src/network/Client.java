@@ -69,7 +69,6 @@ public class Client
 			try
 			{
 				socket.send(packet); // send it to Server
-				System.out.println("Client> sending KeyEvent");
 			} catch (Exception e) { System.out.println("Client ERROR> sending KeyEvent "); System.exit(1); }
 		}
 		keyManager.updateKeys();
@@ -82,7 +81,6 @@ public class Client
 		try
 		{
 			socket.receive(packet); // receive List<Player>
-			System.out.println("Client> receive");
 		} catch (Exception e) { System.out.println("Client ERROR> receive"); System.exit(1); }
 
 		LinkedList<Player> players = (LinkedList<Player>) byteArrayToObject(packet.getData()); // convert it to LinkedList<Player>

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.awt.Color;
 import java.net.InetAddress;
 
+import misc.KeyManager;
+
 public class Player implements Serializable
 {
 	public static final int SPEED = 5, SIZE = 20;
@@ -33,14 +35,8 @@ public class Player implements Serializable
 
 	public void applyKeys(byte[] keys)
 	{
-		for (int i = 0; i < keys.length; i++)
+		for (int i = 0; i < KeyManager.KEYS_LENGTH; i++)
 			this.keys[i] = keys[i];
-	}
-
-	public void move(int xOffset, int yOffset)
-	{
-		x += xOffset;
-		y += yOffset;
 	}
 
 	public void render()
@@ -69,7 +65,7 @@ public class Player implements Serializable
 	}
 
 	public void setRunning(boolean running) { this.running = running; }
-	public void setPosition(int x, int y) { this.x = x; this.y = y; }
+	public void resetPosition() { x = 10; y = 10; }
 
 	public InetAddress getAddress() { return address; }
 	public boolean isRunning() { return running; }
