@@ -24,13 +24,12 @@ public class Server
 	DatagramSocket socket;
 	Game game;
 	KeyManager keyManager;
-	LinkedList<Player> players = new LinkedList<Player>();
 	
 	public Server()
 	{
 		System.out.println("Server> started");
 		game = new Game();
-		players.add(new Player(10, 10, true, "localhost"));
+		getPlayers().add(new Player(10, 10, true, "localhost"));
 
 		try
 		{
@@ -72,11 +71,11 @@ public class Server
 	private void send()
 	{
 		DatagramPacket sendPacket = null;
-		byte[] data = objectToByteArray(new LinkedList<Player>(players)); // convert players to data
+		byte[] data = objectToByteArray(new LinkedList<Player>(getPlayers())); // convert players to data
 		
-		for (int i = 1 /* !!! */; i < players.size(); i++) // for every player EXCEPT of the serverPlayer
+		for (int i = 1 /* !!! */; i < getPlayers().size(); i++) // for every player EXCEPT of the serverPlayer
 		{
-			sendPacket = new DatagramPacket(data, data.length, players.get(i).getAddress(), PORT);
+			sendPacket = new DatagramPacket(data, data.length, getPlayers().get(i).getAddress(), PORT);
 		
 			try
 			{
@@ -98,7 +97,7 @@ public class Server
 
 		Player localPlayer = null;
 
-		for (Player player : players) // for all players
+		for (Player player : getPlayers()) // for all players
 		{
 			if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
 			{
@@ -109,7 +108,7 @@ public class Server
 
 		if (localPlayer == null) // if not
 		{
-			players.add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
+			getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
 		}
 
 		localPlayer.applyKeys(keys); // apply the keys to localPlayer
@@ -117,14 +116,14 @@ public class Server
 
 	private void tick()
 	{
-		for (Player player : players)
+		for (Player player : getPlayers())
 			player.tick();
 		game.tick();
 	}
 
 	private void render()
 	{
-		for (Player player : players)
+		for (Player player : getPlayers())
 			player.render();
 		Screen.update();
 	}
@@ -138,5 +137,7 @@ public class Server
 		keyManager.updateKeys();
 	}
 
-	private Player getServerPlayer() { return players.get(0); }
+	private Player getServerPlayer() { return getPlayers().get(0); }
+
+	private LinkedList<Player> getPlayers() { return game.getPlayers(); }
 }
