@@ -84,7 +84,7 @@ public class Server
 
 			localPlayer.applyKeyInfo(ki); // apply the KeyInfo to localPlayer
 
-			try { Thread.sleep(30); } catch (Exception e) {}
+			// try { Thread.sleep(30); } catch (Exception e) {}
 		}
 	}
 	
