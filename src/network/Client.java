@@ -26,7 +26,7 @@ public class Client
 
 	private Client(String args[])
 	{
-		if (args.length != 2)
+		if (args.length != 1)
 		{
 			System.out.println("Usage: ... <address>");
 			System.exit(1);
@@ -63,7 +63,7 @@ public class Client
 
 	private void send()
 	{
-		if (!keyManager.keys.equals(keyManager.oldKeys))
+		if (keyManager.keysChanged())
 		{
 			DatagramPacket packet = new DatagramPacket(keyManager.keys, keyManager.keys.length, ADDR, PORT);
 			try
@@ -72,8 +72,7 @@ public class Client
 				System.out.println("Client> sending KeyEvent");
 			} catch (Exception e) { System.out.println("Client ERROR> sending KeyEvent "); System.exit(1); }
 		}
-		for (int i = 0; i < keyManager.keys.length; i++)
-			keyManager.oldKeys[i] = keyManager.keys[i];
+		keyManager.updateKeys();
 	}
 
 	private LinkedList<Player> receive()

@@ -131,12 +131,11 @@ public class Server
 
 	private void applyKeyEvents()
 	{
-		if (!keyManager.keys.equals(keyManager.oldKeys))
+		if (keyManager.keysChanged())
 		{
 			getServerPlayer().applyKeys(keyManager.keys);
 		}
-		for (int i = 0; i < keyManager.keys.length; i++)
-			keyManager.oldKeys[i] = keyManager.keys[i];
+		keyManager.updateKeys();
 	}
 
 	private Player getServerPlayer() { return players.get(0); }
