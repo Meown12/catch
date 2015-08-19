@@ -7,7 +7,6 @@ import java.net.DatagramPacket;
 
 import network.Client;
 import static misc.Serializer.*;
-import misc.KeyInfo;
 
 public class ClientSender implements KeyListener
 {
@@ -20,15 +19,14 @@ public class ClientSender implements KeyListener
 	}
 
 
-	private void send(int code, boolean value)
+	private void send(KeyEvent keyEvent)
 	{
-		KeyInfo ki = new KeyInfo(code, value); // convert keyEvent to KeyInfo
-		byte[] data = objectToByteArray(ki); // convert it to byte[]
+		byte[] data = objectToByteArray(keyEvent); // convert keyEvent to byte[]
 		DatagramPacket packet = new DatagramPacket(data, data.length, client.ADDR, client.PORT);
 		try
 		{
 			client.socket.send(packet); // send it to Server
-			System.out.println("ClientSender> sending KeyInfo");
+			System.out.println("ClientSender> sending KeyEvent");
 		} catch (Exception e) { System.out.println("ClientSender ERROR> sending KeyEvent "); System.exit(1); }
 	}
 
@@ -38,7 +36,7 @@ public class ClientSender implements KeyListener
 		if (keys[code] == false)
 		{
 			keys[code] = true;
-			send(code, true);
+			send(keyEvent);
 		}
 	}
 
@@ -48,7 +46,7 @@ public class ClientSender implements KeyListener
 		if (keys[code] == true)
 		{
 			keys[code] = false;
-			send(code, false);
+			send(keyEvent);
 		}
 	}
 

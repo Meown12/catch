@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,7 +14,6 @@ import java.net.*;
 import core.Player;
 import core.Screen;
 import core.Game;
-import misc.KeyInfo;
 import static misc.Serializer.*;
 
 public class Server
@@ -46,14 +46,14 @@ public class Server
 			packet = new DatagramPacket(data, data.length);
 			try
 			{
-				socket.receive(packet); // receive KeyInfo as byte[]
+				socket.receive(packet); // receive KeyEvent as byte[]
 				System.out.println("Server> receive data");
 			} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
 
-			KeyInfo ki = null;
+			KeyEvent keyEvent = null;
 			try
 			{
-				ki = (KeyInfo) byteArrayToObject(data); // convert to KeyInfo
+				keyEvent = (KeyEvent) byteArrayToObject(data); // convert to KeyEvent
 			} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
 
 
@@ -61,7 +61,7 @@ public class Server
 
 			for (Player player : getPlayers()) // for all players
 			{
-				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyInfo came from any of you
+				if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
 				{
 					localPlayer = player; // be the localPlayer!
 					break;
@@ -73,8 +73,7 @@ public class Server
 				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
 			}
 
-			System.out.println("applying keyInfo"); // DEBUG
-			localPlayer.applyKeyInfo(ki); // apply the KeyInfo to localPlayer
+			localPlayer.applyKeyEvent(keyEvent); // apply the KeyEvent to localPlayer
 		}
 	}
 	
