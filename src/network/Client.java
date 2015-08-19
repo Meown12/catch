@@ -19,17 +19,17 @@ public class Client
 	private DatagramSocket socket;
 	private KeyManager keyManager;
 
-	public static void main(String args[]) // <address> <port>
+	public static void main(String args[]) // <address>
 	{
 		new Client(args);
 	}
 
 	private Client(String args[])
 	{
-		if (args.length != 1)
+		if (args.length != 1) // if there not one argument
 		{
 			System.out.println("Usage: ... <address>");
-			System.exit(1);
+			System.exit(1); // quit!
 		}
 		try
 		{
@@ -40,9 +40,9 @@ public class Client
 			socket = new DatagramSocket(PORT); // create socket
 			System.out.println("Client> create socket");
 		} catch (Exception e) { System.out.println("Client ERROR> create socket"); System.exit(1); }
-		Screen.init();
-		Screen.get().addKeyListener(keyManager = new KeyManager());
-		run(); // start run()
+		Screen.init(); // init Screen
+		Screen.get().addKeyListener(keyManager = new KeyManager()); // add keyManager onto Screen
+		run(); // goto run()
 	}
 
 	private void run()
@@ -51,7 +51,7 @@ public class Client
 		{
 			@Override public void run()
 			{
-				send();
+				send(); // send keys to Server if they changed
 			}
 		}, 10, 10); // TODO change?
 
@@ -61,9 +61,9 @@ public class Client
 		}
 	}
 
-	private void send()
+	private void send() // if keys changed: send them to server
 	{
-		if (keyManager.keysChanged())
+		if (keyManager.keysChanged()) // are the keys changed?
 		{
 			DatagramPacket packet = new DatagramPacket(keyManager.keys, keyManager.keys.length, ADDR, PORT);
 			try
@@ -71,16 +71,16 @@ public class Client
 				socket.send(packet); // send it to Server
 			} catch (Exception e) { System.out.println("Client ERROR> sending KeyEvent "); System.exit(1); }
 		}
-		keyManager.updateKeys();
+		keyManager.updateKeys(); // reset key states
 	}
 
-	private LinkedList<Player> receive()
+	private LinkedList<Player> receive() // receive players from Server and returns
 	{
 		byte[] data = new byte[2000];
 		DatagramPacket packet = new DatagramPacket(data, data.length);
 		try
 		{
-			socket.receive(packet); // receive List<Player>
+			socket.receive(packet); // receive LinkedList<Player>
 		} catch (Exception e) { System.out.println("Client ERROR> receive"); System.exit(1); }
 
 		LinkedList<Player> players = (LinkedList<Player>) byteArrayToObject(packet.getData()); // convert it to LinkedList<Player>
@@ -92,12 +92,12 @@ public class Client
 		return players;
 	}
 
-	private void render(LinkedList<Player> players)
+	private void render(LinkedList<Player> players) // renders all players
 	{
-		for (Player player : players) // render all players
+		for (Player player : players) // for all players
 		{
-			player.render();
+			player.render(); // render
 		}
-		Screen.update();
+		Screen.update(); // update screen
 	}
 }

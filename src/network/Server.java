@@ -20,7 +20,7 @@ import static misc.Serializer.*;
 
 public class Server
 {
-	public static final short PORT = 4200;
+	public static final short PORT = 4200, FRAME_RATE = 20; // maybe should be higher? TODO
 	DatagramSocket socket;
 	Game game;
 	KeyManager keyManager;
@@ -28,44 +28,45 @@ public class Server
 	public Server()
 	{
 		System.out.println("Server> started");
-		game = new Game();
+		game = new Game(); // create Game (internally adds server-player)
 
 		try
 		{
 			socket = new DatagramSocket(PORT); // setup socket
 			System.out.println("Server> socket init");	
 		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
-		Screen.init();
-		Screen.get().addKeyListener(keyManager = new KeyManager());
-		run();
+
+		Screen.init(); // init screen
+		Screen.get().addKeyListener(keyManager = new KeyManager()); // add keyManager to the screen
+		run(); // run()
 	}
 	
 	public static void main(String args[])
 	{
-		new Server();
+		new Server(); // goto <Server>()
 	}
 
 	private void run()
 	{
-		new Timer().scheduleAtFixedRate(new TimerTask()
+		new Timer().scheduleAtFixedRate(new TimerTask() // repeat all <FRAME_RATE> milliseconds?
 		{
 			@Override public void run()
 			{
-				applyKeyEvents();
-				tick();
-				send();
-				render();
+				applyKeyEvents(); // apply key events for server-player
+				tick(); // tick all players and game
+				send(); // send getPlayers() to all clients
+				render(); // render all players
 			}
-		}, 20, 20);
+		}, FRAME_RATE, FRAME_RATE);
 
-		while (true)	
+		while (true) // repeat forever
 		{
-			receive();
+			receive(); // receive
 		}
 
 	}
 
-	private void send()
+	private void send() // send getPlayers() to all clients
 	{
 		DatagramPacket sendPacket = null;
 		byte[] data = objectToByteArray(new LinkedList<Player>(getPlayers())); // convert players to data
@@ -81,9 +82,9 @@ public class Server
 		}
 	}
 
-	private void receive()
+	private void receive() // receive byte[] keys from the clients
 	{
-		byte[] keys = new byte[200];
+		byte[] keys = new byte[KeyManager.KEYS_LENGTH];
 		DatagramPacket packet = new DatagramPacket(keys, keys.length);
 		try
 		{
@@ -109,27 +110,27 @@ public class Server
 		localPlayer.applyKeys(keys); // apply the keys to localPlayer
 	}
 
-	private void tick()
+	private void tick() // tick players and game
 	{
-		for (Player player : getPlayers())
-			player.tick();
-		game.tick();
+		for (Player player : getPlayers()) // for all players
+			player.tick(); // tick
+		game.tick(); // game.tick()
 	}
 
-	private void render()
+	private void render() // renders all players
 	{
-		for (Player player : getPlayers())
-			player.render();
-		Screen.update();
+		for (Player player : getPlayers()) // for all players
+			player.render(); // render
+		Screen.update(); // update screen
 	}
 
 	private void applyKeyEvents()
 	{
-		if (keyManager.keysChanged())
+		if (keyManager.keysChanged()) // if keys have been pressed or released
 		{
-			getServerPlayer().applyKeys(keyManager.keys);
+			getServerPlayer().applyKeys(keyManager.keys); // give them to the server-player
 		}
-		keyManager.updateKeys();
+		keyManager.updateKeys(); // reset key states
 	}
 
 	private Player getServerPlayer() { return getPlayers().get(0); }
