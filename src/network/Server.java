@@ -18,7 +18,7 @@ import static misc.Serializer.*;
 
 public class Server
 {
-	public static final int FRAME_INTERVAL = 4;
+	public static final int FRAME_INTERVAL = 2;
 	public static short PORT;
 	DatagramPacket packet;
 	DatagramSocket socket;
@@ -45,6 +45,11 @@ public class Server
 			@Override
 			public void run()
 			{
+				for (int i = 0; i < 2; i++)
+				{
+					game.tick();
+				}
+
 				data = new byte[2000];
 				packet = new DatagramPacket(data, data.length);
 				try
@@ -81,10 +86,6 @@ public class Server
 
 		}, FRAME_INTERVAL, FRAME_INTERVAL);
 
-		while (true)
-		{
-			game.tick();
-		}
 	}
 	
 	public static void main(String args[])
