@@ -18,7 +18,7 @@ import static misc.Serializer.*;
 
 public class Server
 {
-	public static final int FRAME_INTERVAL = 60;
+	public static final int FRAME_INTERVAL = 4;
 	public static short PORT;
 	DatagramPacket packet;
 	DatagramSocket socket;
@@ -39,15 +39,6 @@ public class Server
 			socket = new DatagramSocket(PORT); // setup socket
 			System.out.println("Server> socket init");	
 		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
-
-		new Timer().scheduleAtFixedRate(new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				game.tick();
-			}
-		}, FRAME_INTERVAL, FRAME_INTERVAL);
 
 		while (true)
 		{
@@ -82,9 +73,8 @@ public class Server
 				getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
 			}
 
+			System.out.println("applying keyInfo"); // DEBUG
 			localPlayer.applyKeyInfo(ki); // apply the KeyInfo to localPlayer
-
-			// try { Thread.sleep(30); } catch (Exception e) {}
 		}
 	}
 	
@@ -103,4 +93,6 @@ public class Server
 	{
 		return getPlayers().get(0);
 	}
+
+	Game getGame() { return game; }
 }
