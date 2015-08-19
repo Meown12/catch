@@ -8,7 +8,7 @@ import java.net.InetAddress;
 public class Player implements Serializable
 {
 	public static final int SPEED = 5, SIZE = 20;
-	private byte w = 0, a = 0, s = 0, d = 0;
+	private byte[] keys = new byte[200];
 	private boolean running = false;
 	private int x, y;
 	private InetAddress address;
@@ -27,38 +27,14 @@ public class Player implements Serializable
 	public void tick()
 	{
 		// move
-		x += (d-a)*SPEED;
-		y += (s-w)*SPEED;
+		x += (keys[KeyEvent.VK_RIGHT]-keys[KeyEvent.VK_LEFT])*SPEED;
+		y += (keys[KeyEvent.VK_DOWN]-keys[KeyEvent.VK_UP])*SPEED;
 	}
 
-	public void applyKeyEvent(KeyEvent keyEvent)
+	public void applyKeys(byte[] keys)
 	{
-		if (keyEvent.getID() == KeyEvent.KEY_PRESSED) // is the keyEvent represents a key Press
-		{
-			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) // if it's the up-arrow
-				w = 1;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) // .. left-arrow
-				a = 1;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) // .. down-arrw
-				s = 1;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) // .. right-arrow
-				d = 1;
-			else
-				System.out.println("bad key ID: " + keyEvent.getKeyCode());
-		}
-		else // if the keyEvent represents a key Release
-		{
-			if (keyEvent.getKeyCode() == KeyEvent.VK_UP) // as above
-				w = 0;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT)
-				a = 0;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN)
-				s = 0;
-			else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT)
-				d = 0;
-			else
-				System.out.println("bad key ID: " + keyEvent.getKeyCode());
-		}
+		for (int i = 0; i < keys.length; i++)
+			this.keys[i] = keys[i];
 	}
 
 	public void move(int xOffset, int yOffset)

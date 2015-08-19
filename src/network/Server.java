@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,95 +15,129 @@ import java.net.*;
 import core.Player;
 import core.Screen;
 import core.Game;
+import misc.KeyManager;
 import static misc.Serializer.*;
 
 public class Server
 {
-	public static final int FRAME_INTERVAL = 2;
-	public static short PORT;
-	DatagramPacket packet;
+	public static final short PORT = 4200;
 	DatagramSocket socket;
 	Game game;
-	private byte[] data;
+	KeyManager keyManager;
+	LinkedList<Player> players = new LinkedList<Player>();
 	
 	public Server()
 	{
 		System.out.println("Server> started");
-		Screen.init();
-		Screen.get().addKeyListener(new ServerKeyManager(this)); // create ServerKeyManager
 		game = new Game();
-		ServerSender sender = new ServerSender(this); // create ServerSender
-		new Thread(sender).start(); // start ServerSender
+		players.add(new Player(10, 10, true, "localhost"));
 
 		try
 		{
 			socket = new DatagramSocket(PORT); // setup socket
 			System.out.println("Server> socket init");	
 		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
-
-		new Timer().scheduleAtFixedRate(new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				for (int i = 0; i < 2; i++)
-				{
-					game.tick();
-				}
-
-				data = new byte[2000];
-				packet = new DatagramPacket(data, data.length);
-				try
-				{
-					socket.receive(packet); // receive KeyEvent as byte[]
-					System.out.println("Server> receive data");
-				} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
-
-				KeyEvent keyEvent = null;
-				try
-				{
-					keyEvent = (KeyEvent) byteArrayToObject(data); // convert to KeyEvent
-				} catch (Exception e) { System.err.println("Server> data to ki: " + e); System.exit(1); }
-
-
-				Player localPlayer = null;
-
-				for (Player player : getPlayers()) // for all players
-				{
-					if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
-					{
-						localPlayer = player; // be the localPlayer!
-						break;
-					}
-				}
-
-				if (localPlayer == null) // if not
-				{
-					getPlayers().add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
-				}
-
-				localPlayer.applyKeyEvent(keyEvent); // apply the KeyEvent to localPlayer
-			}
-
-		}, FRAME_INTERVAL, FRAME_INTERVAL);
-
+		Screen.init();
+		Screen.get().addKeyListener(keyManager = new KeyManager());
+		run();
 	}
 	
 	public static void main(String args[])
 	{
-		PORT = (short) Integer.parseInt(args[0]);
 		new Server();
 	}
 
-	LinkedList<Player> getPlayers()
+	private void run()
 	{
-		return game.getPlayers();
+		new Timer().scheduleAtFixedRate(new TimerTask()
+		{
+			@Override public void run()
+			{
+				receive();
+			}
+		}, 40, 40);
+
+		new Timer().scheduleAtFixedRate(new TimerTask()
+		{
+			@Override public void run()
+			{
+				applyKeyEvents();
+				tick();
+				send();
+				render();
+			}
+		}, 60, 60);
 	}
 
-	Player getServerPlayer()
+	private void send()
 	{
-		return getPlayers().get(0);
+		DatagramPacket sendPacket = null;
+		byte[] data = objectToByteArray(new LinkedList<Player>(players)); // convert players to data
+		
+		for (int i = 1 /* !!! */; i < players.size(); i++) // for every player EXCEPT of the serverPlayer
+		{
+			sendPacket = new DatagramPacket(data, data.length, players.get(i).getAddress(), PORT);
+		
+			try
+			{
+				socket.send(sendPacket); // send him all players to render
+				System.out.println("ServerSender> send data");
+			} catch (Exception e) {System.err.println("ServerSender> send data: " + e); System.exit(1);}
+		}
 	}
 
-	Game getGame() { return game; }
+	private void receive()
+	{
+		byte[] keys = new byte[200];
+		DatagramPacket packet = new DatagramPacket(keys, keys.length);
+		try
+		{
+			socket.receive(packet); // receive KeyEvent as byte[]
+			System.out.println("Server> receive data");
+		} catch (Exception e) { System.err.println("Server> receive data: " + e); System.exit(1); }
+
+		Player localPlayer = null;
+
+		for (Player player : players) // for all players
+		{
+			if (player.getAddress().getHostAddress().equals(packet.getAddress().getHostAddress())) // if the KeyEvent came from any of you
+			{
+				localPlayer = player; // be the localPlayer!
+				break;
+			}
+		}
+
+		if (localPlayer == null) // if not
+		{
+			players.add(localPlayer = new Player(10, 10, false, packet.getAddress().getHostName())); // create localPlayer
+		}
+
+		localPlayer.applyKeys(keys); // apply the keys to localPlayer
+	}
+
+	private void tick()
+	{
+		for (Player player : players)
+			player.tick();
+		game.tick();
+	}
+
+	private void render()
+	{
+		for (Player player : players)
+			player.render();
+		Screen.update();
+	}
+
+	private void applyKeyEvents()
+	{
+		if (!keyManager.keys.equals(keyManager.oldKeys))
+		{
+			getServerPlayer().applyKeys(keyManager.keys);
+		}
+		for (int i = 0; i < keyManager.keys.length; i++)
+			keyManager.oldKeys[i] = keyManager.keys[i];
+	}
+
+	private Player getServerPlayer() { return players.get(0); }
 }
