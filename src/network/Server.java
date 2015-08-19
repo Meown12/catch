@@ -40,6 +40,16 @@ public class Server
 			System.out.println("Server> socket init");	
 		} catch (Exception e) { System.err.println("Server> socket init: " + e); System.exit(1); }
 
+		new Timer().scheduleAtFixedRate(new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				game.tick();
+			}
+
+		}, FRAME_INTERVAL, FRAME_INTERVAL);
+
 		while (true)
 		{
 			data = new byte[2000];

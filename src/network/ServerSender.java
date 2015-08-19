@@ -27,7 +27,6 @@ public class ServerSender implements Runnable
 		
 	public void run()
 	{
-		server.getGame().tick();
 		DatagramPacket sendPacket = null;
 		while (true) // repeat forever
 		{
