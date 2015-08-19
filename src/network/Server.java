@@ -52,20 +52,18 @@ public class Server
 		{
 			@Override public void run()
 			{
-				receive();
-			}
-		}, 40, 40);
-
-		new Timer().scheduleAtFixedRate(new TimerTask()
-		{
-			@Override public void run()
-			{
 				applyKeyEvents();
 				tick();
 				send();
 				render();
 			}
-		}, 60, 60);
+		}, 20, 20);
+
+		while (true)	
+		{
+			receive();
+		}
+
 	}
 
 	private void send()
