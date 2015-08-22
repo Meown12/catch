@@ -3,7 +3,7 @@ package misc;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 
-import misc.TimeChecker;
+import misc.Debug;
 
 public class KeyManager implements KeyListener // handler of key-events, client and server have one
 {
@@ -16,7 +16,7 @@ public class KeyManager implements KeyListener // handler of key-events, client 
 		keys[keyEvent.getKeyCode()] = 1; // set the key to 1
 
 		if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT)
-			TimeChecker.checkPoint("right pressed");
+			Debug.timeLog("right pressed");
 	}
 
 	@Override public void keyReleased(KeyEvent keyEvent) // if key released

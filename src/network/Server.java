@@ -16,7 +16,7 @@ import core.Player;
 import core.Screen;
 import core.Game;
 import misc.KeyManager;
-import misc.TimeChecker;
+import misc.Debug;
 import static misc.Serializer.*;
 
 public class Server
@@ -53,7 +53,7 @@ public class Server
 		{
 			@Override public void run()
 			{
-				TimeChecker.checkPoint("Server.run()");
+				Debug.timeLog("Server.run()");
 				applyKeyEvents(); // apply key events for server-player
 				tick(); // tick all players and game
 				send(); // send getPlayers() to all clients

@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.net.InetAddress;
 
 import misc.KeyManager;
-import misc.TimeChecker;
+import misc.Debug;
 
 public class Player implements Serializable
 {
@@ -32,17 +32,12 @@ public class Player implements Serializable
 		// move
 		x += (keys[KeyEvent.VK_RIGHT]-keys[KeyEvent.VK_LEFT])*SPEED;
 		y += (keys[KeyEvent.VK_DOWN]-keys[KeyEvent.VK_UP])*SPEED;
-		if (keys[KeyEvent.VK_RIGHT] == 1)
-		{
-			TimeChecker.checkPoint("moved!");
-			System.exit(1);
-		}
 	}
 
 	public void applyKeys(byte[] keys) // assign this.keys to keys
 	{
 		if (keys[KeyEvent.VK_RIGHT] == 1)
-			TimeChecker.checkPoint("applyKeys!");
+			Debug.timeLog("applyKeys!");
 
 		for (int i = 0; i < KeyManager.KEYS_LENGTH; i++)
 			this.keys[i] = keys[i];
