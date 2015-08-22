@@ -16,14 +16,15 @@ import core.Player;
 import core.Screen;
 import core.Game;
 import misc.KeyManager;
+import misc.TimeChecker;
 import static misc.Serializer.*;
 
 public class Server
 {
-	public static final short PORT = 4200, FRAME_RATE = 20; // maybe should be higher? TODO
-	DatagramSocket socket;
-	Game game;
-	KeyManager keyManager;
+	public static final short PORT = 4200, FRAME_RATE = 60; // maybe should be higher? TODO
+	private DatagramSocket socket;
+	private Game game;
+	private KeyManager keyManager;
 	
 	public Server()
 	{
@@ -52,6 +53,7 @@ public class Server
 		{
 			@Override public void run()
 			{
+				TimeChecker.checkPoint("Server.run()");
 				applyKeyEvents(); // apply key events for server-player
 				tick(); // tick all players and game
 				send(); // send getPlayers() to all clients
