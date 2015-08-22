@@ -1,8 +1,6 @@
 package network;
 
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
@@ -17,6 +15,7 @@ import core.Screen;
 import core.Game;
 import misc.KeyManager;
 import misc.Debug;
+import misc.Timer;
 import static misc.Serializer.*;
 
 public class Server
@@ -49,7 +48,7 @@ public class Server
 
 	private void run()
 	{
-		new Timer().scheduleAtFixedRate(new TimerTask() // repeat all <FRAME_RATE> milliseconds?
+		new Timer()
 		{
 			@Override public void run()
 			{
@@ -59,7 +58,7 @@ public class Server
 				send(); // send getPlayers() to all clients
 				render(); // render all players
 			}
-		}, FRAME_RATE, FRAME_RATE);
+		};
 
 		while (true) // repeat forever
 		{
