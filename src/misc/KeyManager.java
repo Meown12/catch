@@ -13,14 +13,13 @@ public class KeyManager implements KeyListener // handler of key-events, client 
 
 	@Override public void keyPressed(KeyEvent keyEvent) // if key pressed
 	{
+		Debug.timeLog("keyPressed");
 		keys[keyEvent.getKeyCode()] = 1; // set the key to 1
-
-		if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT)
-			Debug.timeLog("right pressed");
 	}
 
 	@Override public void keyReleased(KeyEvent keyEvent) // if key released
 	{
+		Debug.timeLog("keyReleased");
 		keys[keyEvent.getKeyCode()] = 0; // set the key to 0
 	}
 

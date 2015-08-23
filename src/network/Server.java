@@ -20,7 +20,7 @@ import static misc.Serializer.*;
 
 public class Server
 {
-	public static final short PORT = 4200, FRAME_RATE = 60; // maybe should be higher? TODO
+	public static final short PORT = 4200;
 	private DatagramSocket socket;
 	private Game game;
 	private KeyManager keyManager;
@@ -48,15 +48,15 @@ public class Server
 
 	private void run()
 	{
-		new Timer()
+		new Timer(160)
 		{
-			@Override public void run()
+			@Override public void function()
 			{
-				Debug.timeLog("Server.run()");
 				applyKeyEvents(); // apply key events for server-player
 				tick(); // tick all players and game
 				send(); // send getPlayers() to all clients
-				render(); // render all players
+				render();
+				Debug.timeLog("rendered");
 			}
 		};
 
@@ -129,6 +129,7 @@ public class Server
 	{
 		if (keyManager.keysChanged()) // if keys have been pressed or released
 		{
+			Debug.timeLog("applyKeys");
 			getServerPlayer().applyKeys(keyManager.keys); // give them to the server-player
 		}
 		keyManager.updateKeys(); // reset key states

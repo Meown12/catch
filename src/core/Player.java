@@ -36,9 +36,6 @@ public class Player implements Serializable
 
 	public void applyKeys(byte[] keys) // assign this.keys to keys
 	{
-		if (keys[KeyEvent.VK_RIGHT] == 1)
-			Debug.timeLog("applyKeys!");
-
 		for (int i = 0; i < KeyManager.KEYS_LENGTH; i++)
 			this.keys[i] = keys[i];
 	}
